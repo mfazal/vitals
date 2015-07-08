@@ -58,6 +58,6 @@ do
 	echo "All values to be passed to API=" $HR, $Blood_oxygen, $body_temp, $env_temp, $position
 
 	#API CAll (Dummy)
-	curl --request GET echo.jsontest.com/heartrate/$HR/Blood_O2/$Blood_oxygen
-
+	#curl --request GET echo.jsontest.com/heartrate/$HR/Blood_O2/$Blood_oxygen
+	curl -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/vitals -d '{"HR": "'"$HR"'", "Blood Oxygen": "'"$Blood_oxygen"'"}'
 done
