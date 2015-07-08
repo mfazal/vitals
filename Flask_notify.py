@@ -2,7 +2,7 @@
 
 from flask import Flask
 from flask import json, jsonify, request
-import smtplib
+import smtplib, subprocess
 app = Flask(__name__)
 
 
@@ -37,8 +37,10 @@ def ruleEngine(vitals_data):
     if int(vitals_data['HR']>70) and int(vitals_data['HR'])<140: 
         print "You're fine"
     else:
-        print "Sending notif"
+        print "Sending notification via Email and Text"
         send_email()
+        #bashCommand = "curl -X POST http://textbelt.com/intl -d number=971507646637 -d 'message=Api-called-Testing' "
+        #subprocess.Popen(bashCommand)
     
 
 @app.route("/")
@@ -50,9 +52,10 @@ def hello():
 def index():
     return "My name is guru"
 
-@app.route("/vitals", methods= ['POST'])
-def postVitals():
+@app.route("/api/<device_id>/vitals", methods= ['POST'])
+def postVitals(device_id):
     #print request.method, request.headers
+    print "Device id =  ", device_id
     if request.headers['Content-Type'] == 'application/json':
         #print "posted some data"
         json_dict=request.get_json() 
@@ -61,6 +64,18 @@ def postVitals():
         #return "Received JSON Message: " + jsonify(**request.json)
         ruleEngine(json_dict) 
         return "Received JSON Message"
+
+@app.route("/api/<device_id>/SOS", methods= ['POST'])
+def SOS_Trigger(device_id):
+    if request.headers['Content-Type'] == 'text/plain':
+        send_email()
+        data_recd = request.data
+        print data_recd
+        return data_recd
+
+@app.route("/api/dashboard")
+def dashboard():
+    return "I am in dashboard! More work needs to be done!!!"
 
 
 if __name__ == '__main__':

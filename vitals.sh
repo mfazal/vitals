@@ -12,12 +12,12 @@ echo $num_Connect_devices
 
 # Initializing counter
 counter=0
-
+ctr=0
 # infinite while loop
 while true
 do 
 	echo $counter
-	echo ${all_Connected_devices[$counter]}
+	device_id=${all_Connected_devices[$counter]}
 	
 	#Generating Health Vitals
 	HR=$(shuf -i 60-100 -n 1)
@@ -59,5 +59,15 @@ do
 
 	#API CAll (Dummy)
 	#curl --request GET echo.jsontest.com/heartrate/$HR/Blood_O2/$Blood_oxygen
-	curl -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/vitals -d '{"HR": "'"$HR"'", "Blood Oxygen": "'"$Blood_oxygen"'"}'
+	curl -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/api/$device_id/vitals -d '{"HR": "'"$HR"'", "Blood Oxygen": "'"$Blood_oxygen"'", "Body_Temp":"'"$body_temp"'", "Env_temp": "'"$env_temp"'", "Barometer_read":"'"$position"'"}'
+	
+	ctr=$((ctr+1))
+	echo $ctr
+	if [ $((ctr%10)) -eq 0 ]; then
+		echo "SOS warning"
+		curl -H "Content-Type: text/plain" -X POST http://127.0.0.1:5000/api/$device_id/SOS -d '{I am in danger}'
+		exit 0
+	fi
+
+
 done
