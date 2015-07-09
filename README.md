@@ -1,18 +1,22 @@
 # vitals
---> Contains 2 Files 
-1. vitals.sh (Shell script) 
-2. Flask_notify.py (Python)
 
-How to Execute? [First run python file, followed by bash]
+-->Contents
+1. Folder: Api_server
+2. Bash script: vitals.sh
+3. Python script: Flask_notify.py
 
-python Flask_notify.py
-1. Runs server and all routes are active
-2. Can be linked to models.py and other add-ons.
-[Note: Contains Rule Engine as a function; This can be modularized by building a new .py script for the same]
+-->How to Use? Execution order?
+1. Clone vitals folder to local computer
+2. Enter app-server folder (cd vitals/api-server)
+3. execute run.py (python run.py) [This will set up a localhost server]
+4. Enter the vitals folder (cd vitals)
+5. execute vitals.sh (bash vitals.sh)
 
 
-bash vitals.sh 
-1. This will execute the file; ie generate random health-vitals data (every second) and make an API call to the localhost.
-2. After 10[can be varied] iterations, the SOS will be triggered (plainly done as a POC). 
+-->Expected outcome
+1. As the bash script (vitals.sh) is executed, health vitals data is generated (randomized, for POC) and posted on the browser. 
+2. Once the data is posted, a rule-engine is executed to assess if an emergency notif is to be sent.
+3. All the health-vitals data is stored vitals table (in app.db), SOS message, if any, in SOS table (in app.db), notifications, if any, in notifications table (in app.db)
+4. To retrieve information from sqlite3 db in json format, visit (http://127.0.0.1:5000/Trial) in your browser. Here, it is built to retrieve the first row from the vitals table (from app.db)
 
 
