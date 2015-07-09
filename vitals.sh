@@ -5,7 +5,8 @@ RANDOM=$$$(date +%s)
 
 
 # List of Device id's
-declare -a all_Connected_devices=(dev_001 dev_002 dev_003 dev_004 dev_005)
+#declare -a all_Connected_devices=(dev_001 dev_002 dev_003 dev_004 dev_005)
+declare -a all_Connected_devices=(1 2 3 4 5)
 num_Connect_devices=${#all_Connected_devices[@]} 
 num_Connect_devices=$((num_Connect_devices-1))
 echo $num_Connect_devices
