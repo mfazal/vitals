@@ -6,13 +6,13 @@ from flask import jsonify, request, render_template
 import smtplib, subprocess, json
 from models import SWJsonify, User, Post, Device, Vital, SOS, Notification, NotificationContact
 #app = Flask(__name__)
-
+import json
 
 def send_email(text):
     gmail_user = "pcsvitals@gmail.com"
     gmail_pwd = "slativscp"
     FROM = 'pcsvitals@gmail.com'
-    TO = ['gpr.1993@gmail.com']
+    TO = ['sharvil2009@gmail.com']
     SUBJECT = "Health vital information"
     TEXT = text
 
@@ -104,10 +104,30 @@ def SOS_Trigger(device_id):
         print data_recd
         return data_recd
 
-@app.route("/api/dashboard")
+@app.route("/api/dashboard", methods= ['GET'])
 def dashboard():
-    return "I am in dashboard! More work needs to be done!!!"
+    vitals = Vital.query.all()
+    no_of_users=5
+    heart_data = [['Timestamp']]
+    for i in range(1, no_of_users+1):
+        heart_data[0].append('User '+str(i))
 
+    time_info = {}
+    for vital in vitals:
+        time = "%s:%s" % (vital.timestamp.minute, vital.timestamp.second)
+        if time in time_info:
+            time_info[time][vital.user_id-1]=vital.heartrate
+        else:
+            time_info[time] = [80 for _ in range(no_of_users)]
+            time_info[time][vital.user_id-1]=vital.heartrate
+    
+    for key, val in time_info.items():
+        temp = [key]
+        for obj in val:
+            temp.append(obj)
+        heart_data.append(temp)
+    
+    return render_template("dashboard.html", json_data=json.dumps(heart_data))
 
 @app.route("/Trial", methods= ['GET', 'POST'])
 def Trial():
@@ -130,7 +150,6 @@ def Trial():
         # return json.dumps(dict_vital)
         vitals = Vital.query.all()
         return SWJsonify({'vitals':vitals })
-
 
 if __name__ == '__main__':
     app.debug= True

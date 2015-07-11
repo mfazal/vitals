@@ -91,6 +91,9 @@ class Vital(db.Model, Serializer):
     bloodoxy = db.Column(db.Float(precision=4), default=0)
     baro = db.Column(db.Float(precision=4), default=0)
     
+    def __repr__(self):
+        return u'DEVICE ID: %d %f %f' % (self.user_id, self.tempinternal, self.tempexternal)
+
     def __init__(self, user_id, tempinternal, tempexternal, heartrate, bloodoxy, baro):
         self.timestamp = datetime.datetime.now()
         self.user_id = user_id
