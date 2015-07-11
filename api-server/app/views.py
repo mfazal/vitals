@@ -4,7 +4,7 @@ from app import app, db, models
 #from flask import Flask
 from flask import jsonify, request, render_template
 import smtplib, subprocess, json
-from models import User, Post, Device, Vital, SOS, Notification, NotificationContact
+from models import SWJsonify, User, Post, Device, Vital, SOS, Notification, NotificationContact
 #app = Flask(__name__)
 
 
@@ -119,16 +119,17 @@ def Trial():
     
             return render_template("index.html", messages=json.dumps(json_dict))
     else:
-        v = Vital.query.get(1)
-        dict_vital = v.__dict__
-        print dict_vital
-        del dict_vital['_sa_instance_state']
-        dict_vital['timestamp'] = str(dict_vital['timestamp'])
+        # v = Vital.query.get(1)
+        # dict_vital = v.__dict__
+        # print dict_vital
+        # del dict_vital['_sa_instance_state']
+        # dict_vital['timestamp'] = str(dict_vital['timestamp'])
 
 
 
-        return json.dumps(dict_vital)
-
+        # return json.dumps(dict_vital)
+        vitals = Vital.query.all()
+        return SWJsonify({'vitals':vitals })
 
 
 if __name__ == '__main__':
